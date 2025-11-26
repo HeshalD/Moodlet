@@ -74,7 +74,7 @@ def get_loudness(path):
 
 def analyze_all(path):
     return {
-        "embedding": extract_vggish(path),
+        "embedding": extract_vggish(path).tolist(),  # Convert numpy array to list
         "bpm": get_bpm(path),
         "key": get_key(path),
         "loudness_rms": get_loudness(path)[0],
