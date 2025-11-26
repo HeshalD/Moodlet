@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const Track = require("../models/trackModel.js");
@@ -11,7 +12,7 @@ router.post('/upload', async (req, res) => {
     const filePath = path.resolve(req.file.path);
 
     // Send file to FastAPI for analysis
-    const response = await axios.post("http://127.0.0.1:8000/analyze/", fs.createReadStream(filePath), {
+    const response = await axios.post(process.env.FASTAPI_URL, fs.createReadStream(filePath), {
       headers: { "Content-Type": "audio/wav" }
     });
 
