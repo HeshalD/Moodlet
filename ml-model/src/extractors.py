@@ -15,10 +15,25 @@ def frame_signal(signal, frame_size, hop_size):
         frames.append(signal[i:i+frame_size] * w)
     return np.array(frames)
 
-# Load VGGish once (slow)
+import os
+
+# VGGish model configuration
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'models')
 VGGISH_URL = "https://tfhub.dev/google/vggish/1"
+
+# Check for model files
+saved_model = os.path.join(MODEL_DIR, 'saved_model.pb')
+variables_dir = os.path.join(MODEL_DIR, 'variables')
+
+# Load VGGish model
 print("Loading VGGish model... (may take a few seconds)")
-vggish_model = hub.load(VGGISH_URL)
+if os.path.exists(saved_model) and os.path.exists(variables_dir):
+    print(f"Loading VGGish model from local directory: {MODEL_DIR}")
+    vggish_model = hub.load(MODEL_DIR)
+else:
+    print(f"Local VGGish model files not found in {MODEL_DIR}, downloading from TF Hub...")
+    vggish_model = hub.load(VGGISH_URL)
+    print("VGGish model loaded from TF Hub")
 
 def get_vggish_embedding_from_wave(y, sr=16000):
     """
